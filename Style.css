@@ -1,0 +1,40 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background: url('https://i.postimg.cc/SX25dNr3/onpi-background.png') no-repeat center center fixed;
+    background-size: cover;
+    color: white;
+}
+
+.logo {
+    width: 150px;
+    margin: 20px;
+}
+
+button {
+    background-color: #ffcc00;
+    border: none;
+    padding: 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 10px;
+}
+
+button:hover {
+    background-color: #ffaa00;
+}
+
+input {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #fff;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    margin: 10px;
+}
+
+input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
