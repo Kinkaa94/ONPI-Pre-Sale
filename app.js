@@ -1,50 +1,83 @@
-document.getElementById("connectButton").addEventListener("click", connectWallet);
-document.getElementById("buyButton").addEventListener("click", buyToken);
+// Importing required Solana adapter and wallet connection methods
+const { Connection, clusterApiUrl, PublicKey, Transaction } = window.solanaWeb3;
+const { WalletAdapterNetwork } = window['@solana/wallet-adapter-base'];
+const { PhantomWalletAdapter, SolletWalletAdapter, SolflareWalletAdapter } = window['@solana/wallet-adapter-wallets'];
+const { useWallet } = window['@solana/wallet-adapter-react-ui'];
 
-let walletAddress = "";
+// Initialize Solana network connection
+const network = WalletAdapterNetwork.Mainnet;
+const endpoint = clusterApiUrl(network);
+const connection = new Connection(endpoint);
 
-function connectWallet() {
-    if (window.solana && window.solana.isPhantom) {
-        window.solana.connect().then(response => {
-            walletAddress = response.publicKey.toString();
-            document.getElementById("walletAddress").textContent = `Connected: ${walletAddress}`;
-        }).catch(err => {
-            console.error("Connection error:", err);
-        });
-    } else {
-        alert("Please install Phantom Wallet.");
+// Initialize wallet adapters
+const wallets = [
+    new PhantomWalletAdapter(),
+    new SolletWalletAdapter(),
+    new SolflareWalletAdapter()
+];
+
+// Setup wallet connection and interaction
+let walletAdapter = null;
+
+// Connect button
+document.getElementById('connect-wallet').addEventListener('click', async () => {
+    try {
+        if (!walletAdapter) {
+            walletAdapter = new PhantomWalletAdapter();
+            await walletAdapter.connect();
+            document.getElementById('wallet-status').textContent = `Wallet connected: ${walletAdapter.publicKey.toString()}`;
+        } else {
+            await walletAdapter.disconnect();
+            document.getElementById('wallet-status').textContent = 'Wallet disconnected';
+        }
+    } catch (error) {
+        document.getElementById('wallet-status').textContent = 'Connection failed';
     }
+});
+
+// Handling the purchase of tokens
+document.getElementById('buy-button').addEventListener('click', async () => {
+    const amount = document.getElementById('amount').value;
+
+    if (!amount || isNaN(amount) || parseFloat(amount) < 0.03 || parseFloat(amount) > 1.5) {
+        alert("Amount must be between 0.03 and 1.5 SOL");
+        return;
+    }
+
+    // Your smart contract address and token details
+    const smartContractAddress = new PublicKey('4dnv1yjdmYYdBKLkMokGLVNxCpyxQrD2yi6MRbtPU5DK');
+    const transaction = new Transaction().add(
+        // Add necessary instructions for token purchase here
+    );
+
+    try {
+        const signature = await walletAdapter.sendTransaction(transaction, connection);
+        await connection.confirmTransaction(signature);
+        document.getElementById('status').textContent = 'Transaction successful: ' + signature;
+    } catch (error) {
+        document.getElementById('status').textContent = 'Transaction failed';
+    }
+});
+
+// Countdown Timer for Pre-sale
+function startCountdown() {
+    const endDate = new Date("2025-04-10T00:00:00Z").getTime();
+    const timer = setInterval(function() {
+        const now = new Date().getTime();
+        const distance = endDate - now;
+
+        if (distance < 0) {
+            clearInterval(timer);
+            document.getElementById("countdown").innerHTML = "Pre-sale has ended";
+        } else {
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("countdown").innerHTML = `Time remaining: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+        }
+    }, 1000);
 }
 
-function buyToken() {
-    const solAmount = parseFloat(document.getElementById("amount").value);
-    if (solAmount < 0.03 || solAmount > 1.5) {
-        document.getElementById("status").textContent = "Amount should be between 0.03 SOL and 1.5 SOL.";
-    } else {
-        // Add functionality to buy ONPI here
-        document.getElementById("status").textContent = `Buying ${solAmount} SOL worth of ONPI...`;
-    }
-}
-
-// Countdown timer
-const endDate = new Date('2025-04-10T00:00:00Z').getTime();
-const countdownElement = document.getElementById("countdown");
-
-function updateCountdown() {
-    const now = new Date().getTime();
-    const timeLeft = endDate - now;
-
-    if (timeLeft <= 0) {
-        countdownElement.innerHTML = "Pre-sale has ended!";
-        clearInterval(timer);
-    } else {
-        const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-
-        countdownElement.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-    }
-}
-
-const timer = setInterval(updateCountdown, 1000);
+startCountdown();
