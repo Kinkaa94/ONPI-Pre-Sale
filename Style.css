@@ -1,54 +1,75 @@
+/* Stiluri generale */
 body {
     font-family: Arial, sans-serif;
-    background-image: url('https://i.postimg.cc/SX25dNr3/onpi-background.png');
-    background-size: cover;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    color: #fff;
-}
-
-#container {
+    background-color: #f4f4f4;
     text-align: center;
-    background: rgba(0, 0, 0, 0.7);
-    padding: 30px;
-    border-radius: 10px;
-    width: 80%;
-    max-width: 600px;
+    padding: 50px 0;
 }
 
-#logo {
+/* Container principal */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Stiluri pentru logo */
+.logo-container {
+    margin-top: 20px;
+}
+
+.logo {
     width: 200px;
-    margin-bottom: 20px;
+    height: auto;
 }
 
-button {
-    background-color: #f44336;
+/* Butonul pentru conectarea wallet-ului */
+#connect-wallet-btn {
+    background-color: #4CAF50;
     color: white;
-    border: none;
     padding: 15px 32px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
-    cursor: pointer;
+    margin-top: 20px;
+    border: none;
     border-radius: 5px;
-    margin-top: 10px;
+    cursor: pointer;
 }
 
-button:hover {
-    background-color: #ff6347;
+#connect-wallet-btn:hover {
+    background-color: #45a049;
 }
 
-#amount {
-    padding: 10px;
-    width: 150px;
-    font-size: 16px;
+/* Cronometru */
+#countdown {
+    margin-top: 20px;
+    font-size: 20px;
+    color: #333;
+    font-weight: bold;
 }
 
-#roadmap {
+/* Detalii Pre-Sale */
+#sale-details, #roadmap {
     margin-top: 30px;
-    text-align: left;
+    font-size: 18px;
+    color: #333;
+}
+
+/* Roadmap */
+#roadmap {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+footer {
+    margin-top: 50px;
+    font-size: 14px;
+    color: #777;
 }
