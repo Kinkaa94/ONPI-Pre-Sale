@@ -1,40 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ONPI Pre-Sale</title>
-
-    <!-- Solana Wallet Adapter Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/@solana/wallet-adapter-base@0.8.0/lib/index.iife.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@solana/wallet-adapter-react@0.8.0/lib/index.iife.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@solana/wallet-adapter-wallets@0.8.0/lib/index.iife.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@solana/wallet-adapter-react-ui@0.8.0/lib/index.iife.js"></script>
-
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <div id="container">
-        <img src="https://i.postimg.cc/WqPQhL0K/onpi.png" alt="ONPI Logo" id="logo">
-        <h1>Welcome to the ONPI Pre-Sale</h1>
-        <p>Price: 0.000006 SOL per ONPI</p>
-        <p>Max Supply: 10,000,000,000 ONPI</p>
-        <p>Start: 10.02.2025 | End: 10.04.2025</p>
 
-        <!-- Wallet Connection Section -->
-        <div>
-            <button id="connect-wallet">Connect Wallet</button>
-            <p id="wallet-status">Wallet not connected</p>
+<body>
+    <div class="container">
+        <!-- Mesaj de bun venit -->
+        <h1>Welcome to ONPI Pre-Sale</h1>
+
+        <!-- Logo sub mesajul de bun venit -->
+        <div class="logo-container">
+            <img src="https://i.postimg.cc/WqPQhL0K/onpi.png" alt="ONPI Logo" class="logo">
         </div>
 
-        <!-- Token Purchase Section -->
-        <p>Amount to buy: <input type="number" id="amount" placeholder="Enter SOL amount"></p>
-        <button id="buy-button">Buy ONPI</button>
+        <!-- Descriere scurtă -->
+        <p>Join our Pre-Sale and become part of the ONPI community!</p>
 
-        <div id="status"></div>
+        <!-- Buton pentru conectarea wallet-ului -->
+        <button id="connect-wallet-btn">Connect Wallet</button>
+
+        <!-- Cronometru pentru Pre-Sale -->
         <div id="countdown"></div>
 
-        <!-- Roadmap Section -->
+        <!-- Detalii suplimentare Pre-Sale -->
+        <div id="sale-details">
+            <p><strong>Pre-Sale Start Date:</strong> 10.02.2025</p>
+            <p><strong>Pre-Sale End Date:</strong> 10.04.2025</p>
+            <p><strong>Price per unit:</strong> 0.000006 SOL</p>
+            <p><strong>Min Purchase:</strong> 0.03 SOL</p>
+            <p><strong>Max Purchase:</strong> 1.5 SOL</p>
+            <p><strong>Total Supply:</strong> 10,000,000,000 ONPI</p>
+        </div>
+
+        <!-- Roadmap -->
         <div id="roadmap">
             <h2>Roadmap</h2>
             <p><strong>Q1 2025:</strong> Launch of the ONPI token and staking platform.</p>
@@ -42,8 +45,13 @@
             <p><strong>Q3 2025:</strong> Implementation of a complete decentralized governance system and development of token use applications.</p>
             <p><strong>Q4 2025:</strong> Expansion of partnerships and integration with major exchanges like Binance, Gate.io, MEXC, and Kucoin.</p>
         </div>
+
+        <footer>
+            <p>© 2025 ONPI Project. All Rights Reserved.</p>
+        </footer>
     </div>
 
     <script src="app.js"></script>
 </body>
+
 </html>
