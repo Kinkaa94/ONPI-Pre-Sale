@@ -4,33 +4,114 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ONPI Pre-Sale</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/solana-web3.js/1.75.0/web3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.39.0/dist/index.iife.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@solana/wallet-adapter-wallets@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@solana/wallet-adapter-react@latest"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: url('https://i.postimg.cc/SX25dNr3/onpi-background.png') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+        }
+        #connect-button, #buy-button {
+            background-color: #ff6600;
+            border: none;
+            padding: 15px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <img src="https://i.postimg.cc/WqPQhL0K/onpi.png" alt="ONPI Logo" class="logo">
-    </header>
+    <h1>Welcome to ONPI Pre-Sale</h1>
+    <img src="https://i.postimg.cc/WqPQhL0K/onpi.png" alt="ONPI Logo" style="width: 200px; height: auto;">
+    
+    <!-- Conectare portofel -->
+    <button id="connect-button">Connect Wallet</button>
+    
+    <!-- Buton de cumpărare -->
+    <button id="buy-button" style="display: none;">Buy Now</button>
 
-    <main>
-        <h1>ONPI Token Pre-Sale</h1>
-        <p><strong>Smart Contract:</strong> 4dnv1yjdmYYdBKLkMokGLVNxCpyxQrD2yi6MRbtPU5DK</p>
-        <p><strong>Price:</strong> 0.000006 SOL per ONPI</p>
-        <p><strong>Max Supply:</strong> 10,000,000,000 ONPI</p>
-        <p><strong>Start Date:</strong> 10.02.2025 | <strong>End Date:</strong> 10.04.2025</p>
-        <p><strong>Minimum purchase:</strong> 0.03 SOL | <strong>Maximum:</strong> 1.5 SOL</p>
+    <script>
+        const walletButton = document.getElementById("connect-button");
+        const buyButton = document.getElementById("buy-button");
 
-        <div id="countdown"></div>
+        let connectedWallet = null;
+        const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl("devnet"));
 
-        <button id="connectButton">Connect Wallet</button>
-        <p id="walletAddress"></p>
+        const { SystemProgram } = solanaWeb3;
+        
+        // Verifică dacă portofelul Solana este instalat
+        if (window.solana && window.solana.isPhantom) {
+            walletButton.disabled = false;
+            walletButton.textContent = 'Connect Phantom Wallet';
+        } else {
+            walletButton.disabled = true;
+            walletButton.textContent = 'Install Phantom Wallet';
+        }
 
-        <input type="number" id="amount" placeholder="Enter SOL amount" step="0.01" min="0.03" max="1.5">
-        <button id="buyButton">Buy ONPI</button>
+        // Conectează portofelul
+        walletButton.addEventListener('click', async () => {
+            try {
+                if (window.solana && window.solana.isPhantom) {
+                    // Conectare la portofelul Phantom
+                    await window.solana.connect();
+                    connectedWallet = window.solana.publicKey.toString();
+                    walletButton.textContent = `Wallet Connected: ${connectedWallet}`;
+                    buyButton.style.display = 'block'; // Arată butonul de cumpărare
+                } else {
+                    alert("Please install Phantom Wallet.");
+                }
+            } catch (error) {
+                console.log("Connection failed: ", error);
+            }
+        });
 
-        <p id="status"></p>
-    </main>
+        // Cumpără ONPI
+        buyButton.addEventListener('click', async () => {
+            try {
+                if (!connectedWallet) {
+                    alert("Please connect your wallet first!");
+                    return;
+                }
 
-    <script src="app.js"></script>
+                const buyerPublicKey = new solanaWeb3.PublicKey(connectedWallet);
+                const senderWallet = window.solana;
+
+                // Adresa contractului ONPI
+                const onpiAddress = new solanaWeb3.PublicKey("4dnv1yjdmYYdBKLkMokGLVNxCpyxQrD2yi6MRbtPU5DK");
+
+                // Crearea unei tranzacții
+                const transaction = new solanaWeb3.Transaction().add(
+                    SystemProgram.transfer({
+                        fromPubkey: buyerPublicKey,
+                        toPubkey: onpiAddress,
+                        lamports: 0.03 * solanaWeb3.LAMPORTS_PER_SOL, // Exemplu de suma (0.03 SOL)
+                    })
+                );
+
+                // Semnarea tranzacției
+                const signedTransaction = await senderWallet.signTransaction(transaction);
+
+                // Trimiterea tranzacției
+                const signature = await connection.sendRawTransaction(signedTransaction.serialize());
+                console.log("Transaction signature:", signature);
+
+                // Așteaptă confirmarea tranzacției
+                const confirmation = await connection.confirmTransaction(signature);
+                if (confirmation.value.err) {
+                    alert("Transaction failed!");
+                } else {
+                    alert("Transaction successful!");
+                }
+
+            } catch (error) {
+                console.log("Buy failed: ", error);
+            }
+        });
+    </script>
 </body>
 </html>
