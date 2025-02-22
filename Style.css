@@ -1,69 +1,80 @@
+/* Resetare stiluri implicite */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Fundalul paginii cu gradient */
 body {
-    background-image: url('https://i.postimg.cc/SX25dNr3/onpi-background.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    height: 100vh;
-    overflow-y: auto; /* Permite derularea paginii */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    text-align: center;
-    font-family: Arial, sans-serif;
-    color: white;
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(135deg, #ff4c00, #ff6600);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 }
 
+/* Containerul principal */
+.main-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Secțiunea principală a paginii */
+.hero-section {
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 40px 50px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  width: 80%;
+  max-width: 800px;
+}
+
+/* Logo */
 .logo {
-    max-width: 300px;
-    width: 100%;
-    margin-bottom: 20px;
+  width: 200px;
+  height: auto;
+  margin-bottom: 20px;
 }
 
-#connectWallet, #buyTokens {
-    background-color: #ffcc00;
-    border: none;
-    padding: 15px;
-    cursor: pointer;
-    font-size: 16px;
-    border-radius: 5px;
-    margin-top: 10px;
+/* Titlu */
+h1 {
+  font-size: 40px;
+  margin-bottom: 20px;
 }
 
-.presale {
-    background: rgba(0, 0, 0, 0.8);
-    padding: 30px;
-    border-radius: 10px;
-    width: 80%;
-    max-width: 400px;
+/* Informații suplimentare */
+.info {
+  font-size: 18px;
+  margin-bottom: 10px;
 }
 
-#timer {
-    font-size: 18px;
-    color: #ffcc00;
-    margin-top: 15px;
+/* Butoane */
+.btn {
+  background-color: #ff4c00;
+  color: white;
+  padding: 15px 30px;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  margin-top: 20px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
 }
 
-.roadmap {
-    background-color: rgba(0, 0, 0, 0.8);
-    padding: 30px;
-    border-radius: 10px;
-    width: 80%;
-    max-width: 600px;
-    margin-top: 20px;
+.btn:hover {
+  background-color: #ff6600;
 }
 
-.roadmap h2 {
-    margin-bottom: 10px;
-}
-
-.roadmap ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-.roadmap li {
-    font-size: 16px;
-    margin: 10px 0;
+/* Adăugăm o secțiune pentru status */
+#status {
+  margin-top: 20px;
+  font-size: 16px;
+  color: #fff;
 }
