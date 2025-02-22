@@ -1,62 +1,58 @@
-// Initialize connection to Solana
-const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl('devnet'), 'confirmed');
+let connection, wallet, provider;
+const preSaleContractAddress = "4dnv1yjdmYYdBKLkMokGLVNxCpyxQrD2yi6MRbtPU5DK";
+const pricePerToken = 0.000006; // SOL
+const minPurchase = 0.03; // SOL
+const maxPurchase = 1.5; // SOL
 
-// Global variable for wallet provider
-let walletProvider = null;
-
-// Connect wallet function
-const connectWallet = async () => {
-    if (window.solana && window.solana.isPhantom) {
-        try {
-            const response = await window.solana.connect();
-            console.log('Connected', response.publicKey.toString());
-            walletProvider = response;
-        } catch (err) {
-            console.log('Wallet connection failed', err);
-        }
+async function connectWallet() {
+  if ("solana" in window) {
+    provider = window.solana;
+    if (provider.isPhantom) {
+      try {
+        const response = await provider.connect();
+        wallet = response.publicKey.toString();
+        document.getElementById("connect-wallet").style.display = 'none';
+        document.getElementById("buy-token").style.display = 'block';
+        document.getElementById("status").innerText = `Wallet conectat: ${wallet}`;
+      } catch (err) {
+        document.getElementById("status").innerText = 'Conectarea a eșuat';
+      }
     } else {
-        alert('Please install Phantom wallet to proceed.');
+      alert('Instalează Phantom Wallet pentru a participa la pre-sale!');
     }
-};
+  } else {
+    alert('Solana Wallet nu este instalat. Te rugăm să instalezi Phantom Wallet.');
+  }
+}
 
-// Countdown for Pre-Sale
-const countdownTimer = () => {
-    const endDate = new Date('2025-04-10T00:00:00Z').getTime();
-    const x = setInterval(() => {
-        const now = new Date().getTime();
-        const distance = endDate - now;
+async function buyTokens() {
+  const amountInSOL = prompt("Introdu suma în SOL pentru a cumpăra tokenuri ONPI (minim 0.03 SOL): ");
+  const amount = parseFloat(amountInSOL);
 
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+  if (amount < minPurchase || amount > maxPurchase) {
+    alert(`Suma trebuie să fie între ${minPurchase} SOL și ${maxPurchase} SOL.`);
+    return;
+  }
 
-        document.getElementById('countdown').innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+  try {
+    const transaction = new solanaWeb3.Transaction();
+    const transferInstruction = new solanaWeb3.SystemProgram.transfer({
+      fromPubkey: wallet,
+      toPubkey: new solanaWeb3.PublicKey(preSaleContractAddress),
+      lamports: amount * solanaWeb3.LAMPORTS_PER_SOL, // Convertește SOL în lamports
+    });
 
-        if (distance < 0) {
-            clearInterval(x);
-            document.getElementById('countdown').innerHTML = "EXPIRED";
-        }
-    }, 1000);
-};
+    transaction.add(transferInstruction);
 
-// Buy ONPI function (simplified, add logic to send transaction)
-const buyONPI = () => {
-    if (!walletProvider) {
-        alert('Please connect your wallet first!');
-        return;
-    }
+    const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl('mainnet-beta'));
+    const signedTransaction = await provider.signTransaction(transaction);
+    const txid = await connection.sendRawTransaction(signedTransaction.serialize());
 
-    // Implement token purchase logic here, using the connected wallet
-    console.log('Purchasing ONPI...');
+    document.getElementById("status").innerText = `Tranzacție trimisă: ${txid}`;
+  } catch (err) {
+    document.getElementById("status").innerText = 'Eroare la procesarea tranzacției!';
+  }
+}
 
-    // For now, just log the public key
-    console.log(walletProvider.publicKey.toString());
-};
-
-// Event listeners for buttons
-document.getElementById('connect-wallet-btn').addEventListener('click', connectWallet);
-document.getElementById('buy-btn').addEventListener('click', buyONPI);
-
-// Start countdown on page load
-window.onload = countdownTimer;
+document.getElementById("connect-wallet").addEventListener("click", connectWallet);
+document.getElementById("buy-token").addEventListener("click", buyTokens);
